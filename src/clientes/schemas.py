@@ -33,7 +33,7 @@ class CrearClienteRequest(BaseModel):
     @field_validator("email")
     def validar_email(cls, v):
         if not EMAIL_PATTERN.match(v):
-            raise HTTPException(422, "Estructura del email no valida")
+            raise BusinessException(codigo=422, mensaje="Estructura del email no valida")
         
         return v
 
