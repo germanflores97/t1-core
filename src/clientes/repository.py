@@ -6,13 +6,13 @@ from typing import Dict
 coleccion_clientes = get_db()["clientes"]
 
 def crear_cliente(cliente: Cliente) -> str:
-    cliente_registrado = coleccion_clientes.insert_one(cliente.model_dump())
+    cliente_registrado = coleccion_clientes.insert_one(cliente.to_mongo())
 
-    return str(cliente_registrado.inserted_id)
+    return cliente_registrado.inserted_id
 
 def actualizar_cliente(cliente: Cliente) -> int:
     registros_actualizados = coleccion_clientes.update_one(
-        {"_id": ObjectId(cliente.id)}, 
+        {"_id": cliente.id}, 
         {
             "$set": {
                 "nombres": cliente.nombres,
