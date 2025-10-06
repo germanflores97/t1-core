@@ -77,7 +77,8 @@ def aplicar_reembolso(id:str) -> AplicarReembolsoResponse:
     valido, mensaje = validaciones_reembolso(id)
     response = ejecutar_reembolso(id) if valido else AplicarReembolsoResponse(reembolsado=False, detalle=mensaje)
 
-    cobros_repository.aplicar_reembolso(id)
+    if response.reembolsado:
+        cobros_repository.aplicar_reembolso(id)
     
     return response
 
