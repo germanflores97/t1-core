@@ -1,7 +1,5 @@
 from fastapi import HTTPException
-from bson import ObjectId
 from src.commons.models import PyObjectId
-from src.clientes.models import Cliente
 from src.tarjetas.schemas import CrearTarjetaRequest, CrearTarjetaResponse, ConsultarTarjetaResponse, ActualizarTarjetaRequest, ActualizarTarjetaResponse, EliminarTarjetaResponse
 from src.tarjetas.models import Tarjeta
 from src.tarjetas.utils import ofuscar_tarjeta

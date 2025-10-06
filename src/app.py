@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.clientes.routes import clientes_router
 from src.tarjetas.routes import tarjetas_router
+from src.cobros.routes import cobros_router
 from src.commons.exceptions import BusinessException
 from src.commons.schemas import GenericResponse
 
@@ -23,3 +24,4 @@ async def http_error_handler(request: Request, call_next) -> Response:
 
 app.include_router(router=clientes_router, prefix="/clientes")
 app.include_router(router=tarjetas_router, prefix="/tarjetas")
+app.include_router(router=cobros_router, prefix="/cobros")
