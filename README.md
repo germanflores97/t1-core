@@ -27,3 +27,21 @@ Los requisitos para ambientar el proyecto son los siguientes:
 
     - El proyecto esta hecho en FastAPI por lo cual automaticamente genera documentacion en formato OpenAPI, para acceder a ella se puede acceder mediante la url "http://localhost:8080/docs" una vez iniciado el servicio
     - El repositorio cuenta con un archivo .env de prueba en la carpeta src, ahi se deberan configurar las variables externalizadas que se requieran, una de ellas es la url de mongodb
+
+## Test
+
+Se anexa un listado de tarjetas con las que se puede probar el funcionamiento de los modulos de tarjetas y cobros
+
+Tarjetas correctas
+
+    - 4242424242424242
+    - 5200828282828210
+    - 2223003122003222
+    - 5105105105105100
+    - 6011111111111117
+
+Tarjetas incorrectas
+
+    - 4242424242424ABC #No cumple la estructura de 16 caracteres numericos
+    - 5200828282828212 #No cumple las validaciones del algoritmo Luhn
+    - 5105105105105099 #No cumple las validaciones del algoritmo Luhn
