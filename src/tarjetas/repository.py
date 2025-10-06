@@ -16,6 +16,9 @@ def consultar_tarjeta(id:str) -> Dict | None:
 def consultar_tarjeta_por_cliente_id_bin_terminacion(cliente_id:str, bin:str, terminacion:str):
     return coleccion_tarjetas.find_one({"cliente_id": ObjectId(cliente_id), "bin": bin, "terminacion": terminacion})
 
+def consultar_tarjetas_por_cliente(cliente_id:str):
+    return coleccion_tarjetas.find({"cliente_id": ObjectId(cliente_id)})
+
 def actualizar_tarjeta(tarjeta: Tarjeta) -> int:
     registros_actualizados = coleccion_tarjetas.update_one(
         {"_id": tarjeta.id},

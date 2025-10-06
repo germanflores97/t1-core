@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from fastapi.exceptions import HTTPException
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 import re
 
@@ -34,3 +34,21 @@ class AplicarCobroRequest(BaseModel):
 class AplicarCobroResponse(BaseModel):
     aplicado: bool
     detalle: str
+
+class CobroDto(BaseModel):
+    id: str
+    tarjeta_id: str
+    terminacion_tarjeta: str
+    importe: float
+    fecha_operacion: str
+    concepto: Optional[str]
+    aplicado: bool
+    descripcion_estatus: str
+    fecha_creacion: str
+    fecha_actualizacion: Optional[str]
+    reembolsado: bool
+    fecha_reembolso: Optional[str]
+
+class ConsultarHistorialPorClienteResponse(BaseModel):
+    cobros: List[CobroDto]
+
