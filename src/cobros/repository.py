@@ -7,10 +7,10 @@ from datetime import datetime
 
 coleccion_cobros = get_db()["cobros"]
 
-def crear_cobro(datos_cobro: Cobro):
+def crear_cobro(datos_cobro: Cobro) -> str:
     cobro_registrado = coleccion_cobros.insert_one(datos_cobro.to_mongo())
 
-    return cobro_registrado.inserted_id
+    return str(cobro_registrado.inserted_id)
 
 def consultar_cobro(id: str) -> Dict | None:
     return coleccion_cobros.find_one({"_id": ObjectId(id)})

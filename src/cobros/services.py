@@ -14,7 +14,7 @@ def aplicar_cobro(cobro: AplicarCobroRequest) -> AplicarCobroResponse:
     valido, mensaje, tarjeta_id = validaciones_cobro(cobro)
     response = ejecutar_cobro(cobro) if valido else AplicarCobroResponse(aplicado=False, detalle=mensaje)
 
-    cobros_repository.crear_cobro(
+    response.id = cobros_repository.crear_cobro(
         Cobro(
             tarjeta_id=tarjeta_id, importe= cobro.importe, fecha_operacion=datetime.strptime(cobro.fecha_operacion, FORMATO_FECHA_OPERACION),
             concepto=cobro.concepto, estatus=response.aplicado, descripcion_estatus=response.detalle,

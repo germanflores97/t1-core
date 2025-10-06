@@ -35,6 +35,7 @@ class AplicarCobroRequest(BaseModel):
 class AplicarCobroResponse(BaseModel):
     aplicado: bool
     detalle: str
+    id: Optional[str] = None
 
 class CobroDto(BaseModel):
     id: str
