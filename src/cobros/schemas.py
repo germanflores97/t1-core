@@ -1,8 +1,9 @@
 from pydantic import BaseModel, Field, field_validator
-from fastapi.exceptions import HTTPException
 from typing import Optional, List
 from datetime import datetime
 import re
+
+from src.commons.exceptions import BusinessException
 
 FORMATO_FECHA_OPERACION = "%Y/%m/%d %H:%M:%S"
 
@@ -20,14 +21,14 @@ class AplicarCobroRequest(BaseModel):
         try:
             datetime.strptime(v, FORMATO_FECHA_OPERACION)
         except ValueError as error:
-            raise HTTPException(422, "La fecha no tiene un formato de \"YYYY/MM/DD HH24:MI:SS\"")
+            raise BusinessException(codigo=422, mensaje="La fecha no tiene un formato de \"YYYY/MM/DD HH24:MI:SS\"")
         
         return v
     
     @field_validator("cvv")
     def validar_cvv(cls, v):
         if not CVV_PATTERN.match(v):
-            raise HTTPException(422, "El CVV no tiene un formato correcto")
+            raise BusinessException(codigo=422, mensaje="El CVV no tiene un formato correcto")
         
         return v
 
@@ -52,3 +53,6 @@ class CobroDto(BaseModel):
 class ConsultarHistorialPorClienteResponse(BaseModel):
     cobros: List[CobroDto]
 
+class AplicarReembolsoResponse(BaseModel):
+    reembolsado: bool
+    detalle: str

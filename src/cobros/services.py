@@ -1,11 +1,11 @@
-from fastapi import HTTPException
 from datetime import datetime
 from typing import Tuple
 import time
 
+from src.commons.exceptions import BusinessException
 from src.commons.models import PyObjectId
 from src.cobros.models import Cobro
-from src.cobros.schemas import FORMATO_FECHA_OPERACION, AplicarCobroRequest, AplicarCobroResponse, CobroDto, ConsultarHistorialPorClienteResponse
+from src.cobros.schemas import FORMATO_FECHA_OPERACION, AplicarCobroRequest, AplicarCobroResponse, CobroDto, ConsultarHistorialPorClienteResponse, AplicarReembolsoResponse
 import src.tarjetas.repository as tarjetas_repository
 import src.clientes.repository as clientes_repository
 import src.cobros.repository as cobros_repository
@@ -27,13 +27,13 @@ def aplicar_cobro(cobro: AplicarCobroRequest) -> AplicarCobroResponse:
 def validaciones_cobro(cobro: AplicarCobroRequest) -> Tuple[bool, str, PyObjectId]:
     tarjeta = tarjetas_repository.consultar_tarjeta(cobro.tarjeta_id)
     if not tarjeta:
-        raise HTTPException(404, "Tarjeta no existente")
+        raise BusinessException(codigo=404, mensaje="Tarjeta no existente")
     if not tarjeta["activa"]:
         return False, "Tarjeta inactiva", tarjeta["_id"]
 
     cliente = clientes_repository.consultar_cliente(str(tarjeta["cliente_id"]))
     if not cliente:
-        raise HTTPException(404, "Cliente no existente")
+        raise BusinessException(codigo=404, mensaje="Cliente no existente")
     if not cliente["activo"]:
         return False, "Cliente inactivo", tarjeta["_id"]
     
@@ -72,3 +72,29 @@ def consultar_historial_por_cliente(id: str) -> ConsultarHistorialPorClienteResp
             )
 
     return ConsultarHistorialPorClienteResponse(cobros=cobros)
+
+def aplicar_reembolso(id:str) -> AplicarReembolsoResponse:
+    valido, mensaje = validaciones_reembolso(id)
+    response = ejecutar_reembolso(id) if valido else AplicarReembolsoResponse(reembolsado=False, detalle=mensaje)
+
+    cobros_repository.aplicar_reembolso(id)
+    
+    return response
+
+def validaciones_reembolso(id:str) -> Tuple[bool, str]:
+    cobro = cobros_repository.consultar_cobro(id)
+    if not cobro:
+        raise BusinessException(codigo=404, mensaje="Registro de cobro no existente")
+
+    if cobro["reembolsado"]:
+        return False, "Este cobro ya ha sido reembolsado"
+    
+    if not cobro["estatus"]:
+        return False, f"El pago no fue generado y tiene un estatus: {cobro["descripcion_estatus"]}"
+    
+    return True, ""
+
+def ejecutar_reembolso(id:str) -> AplicarReembolsoResponse:
+    time.sleep(0.3)
+
+    return AplicarReembolsoResponse(reembolsado=True, detalle="Reembolso aplicado correctamente")

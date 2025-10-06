@@ -1,7 +1,8 @@
 from pydantic import Field, field_validator, BaseModel
-from fastapi.exceptions import HTTPException
 import re
 from typing import Optional
+
+from src.commons.exceptions import BusinessException
 
 CURP_PATTERN = re.compile( #Se compila el pattern de validacion para un mejor performance
     r"^[A-Z][AEIOU][A-Z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HM]"\
@@ -25,7 +26,7 @@ class CrearClienteRequest(BaseModel):
     @field_validator("curp")
     def validar_curp(cls, v):
         if not CURP_PATTERN.match(v.upper()):
-            raise HTTPException(422, "El CURP no tiene un formato valido")
+            raise BusinessException(codigo=422, mensaje="El CURP no tiene un formato valido")
         
         return v.upper()
     

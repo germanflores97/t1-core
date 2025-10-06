@@ -1,9 +1,9 @@
 from pydantic import BaseModel, field_validator, Field
-from fastapi.exceptions import HTTPException
 import re
 from datetime import datetime
 from typing import Optional
 
+from src.commons.exceptions import BusinessException
 from src.clientes.models import Cliente
 from src.tarjetas.validations import LuhnValidations
 
@@ -28,17 +28,17 @@ class CrearTarjetaRequest(BaseModel):
             </p>
         """
         if not NUMERO_TARJETA_PATTERN.match(v):
-            raise HTTPException(422, "La tarjeta no tiene un formato correcto")
+            raise BusinessException(codigo=422, mensaje="La tarjeta no tiene un formato correcto")
 
         if not LuhnValidations.is_luhn_valid(v):
-            raise HTTPException(422, "La tarjeta no cumple las validaciones Luhn")
+            raise BusinessException(codigo=422, mensaje="La tarjeta no cumple las validaciones Luhn")
 
         return v
     
     @field_validator("cvv")
     def validar_cvv(cls, v):
         if not CVV_PATTERN.match(v):
-            raise HTTPException(422, "El CVV no tiene un formato correcto")
+            raise BusinessException(codigo=422, mensaje="El CVV no tiene un formato correcto")
         
         return v
     
@@ -46,11 +46,11 @@ class CrearTarjetaRequest(BaseModel):
     def validar_expiracion(cls, v):
         matcher = EXPIRACION_PATTERN.match(v)
         if not matcher:
-            raise HTTPException(422, "La fecha de expiracion no tiene un formato correcto")
+            raise BusinessException(codigo=422, mensaje="La fecha de expiracion no tiene un formato correcto")
         
         year = matcher.group(2)
         if int(year) < (datetime.now().year % 100):
-            raise HTTPException(403, "No puede registrar una tarjeta vencida")
+            raise BusinessException(codigo=403, mensaje="No puede registrar una tarjeta vencida")
 
         return v
     
@@ -77,7 +77,7 @@ class ActualizarTarjetaRequest(BaseModel):
     @field_validator("cvv")
     def validar_cvv(cls, v):
         if not CVV_PATTERN.match(v):
-            raise HTTPException(422, "El CVV no tiene un formato correcto")
+            raise BusinessException(codigo=422, mensaje="El CVV no tiene un formato correcto")
         
         return v
 

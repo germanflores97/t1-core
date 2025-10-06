@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from src.commons.models import PyObjectId
 from src.tarjetas.schemas import CrearTarjetaRequest, CrearTarjetaResponse, ConsultarTarjetaResponse, ActualizarTarjetaRequest, ActualizarTarjetaResponse, EliminarTarjetaResponse
 from src.tarjetas.models import Tarjeta
@@ -19,7 +18,7 @@ def crear_tarjeta(datos_tarjeta: CrearTarjetaRequest) -> Tuple[bool, CrearTarjet
     """
     cliente = clientes_repository.consultar_cliente(datos_tarjeta.cliente_id)
     if not cliente:
-        raise HTTPException(404, "Cliente no existente")
+        raise BusinessException(codigo=404, mensaje="Cliente no existente")
 
     tarjeta_ofuscada = ofuscar_tarjeta(datos_tarjeta.numero_tarjeta)
     bin = datos_tarjeta.numero_tarjeta[0:8]
@@ -55,7 +54,7 @@ def consultar_tarjeta(id:str) -> ConsultarTarjetaResponse:
 def actualizar_tarjeta(id: str, datos_tarjeta: ActualizarTarjetaRequest) -> ActualizarTarjetaResponse:
     cliente = clientes_repository.consultar_cliente(datos_tarjeta.cliente_id)
     if not cliente:
-        raise HTTPException(404, "Cliente no existente")
+        raise BusinessException(codigo=404, mensaje="Cliente no existente")
     
     #Se setean datos vacios solo para que se cumpla el contrato, el resto no se actualiza desde el query
     registros_actualizados = tarjetas_repository.actualizar_tarjeta(

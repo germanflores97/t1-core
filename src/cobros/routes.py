@@ -2,7 +2,7 @@ from fastapi import APIRouter, Path
 from fastapi.responses import JSONResponse
 
 from src.commons.schemas import GenericResponse
-from src.cobros.schemas import AplicarCobroRequest, AplicarCobroResponse, ConsultarHistorialPorClienteResponse
+from src.cobros.schemas import AplicarCobroRequest, AplicarCobroResponse, ConsultarHistorialPorClienteResponse, AplicarReembolsoResponse
 import src.cobros.services as cobros_services
 
 cobros_router = APIRouter()
@@ -19,3 +19,10 @@ def consultar_historial_por_cliente(id:str = Path(min_length=24, max_length=24))
     response = cobros_services.consultar_historial_por_cliente(id)
 
     return JSONResponse(GenericResponse(mensaje="Consulta realizada correctamente", respuesta=response).model_dump(), status_code=200)
+
+@cobros_router.post("/{id}/reembolso", tags=["Cobros"], response_class=JSONResponse, response_model=GenericResponse[AplicarReembolsoResponse])
+def aplicar_reembolso(id:str = Path(min_length=24, max_length=24)):
+    response = cobros_services.aplicar_reembolso(id)
+    codigo, mensaje = (200, "Reembolso aplicado correctamente") if response.reembolsado else (400, "Reembolso no aplicado")
+
+    return JSONResponse(GenericResponse(mensaje=mensaje, respuesta=response).model_dump(), status_code=codigo)
