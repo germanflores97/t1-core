@@ -46,8 +46,13 @@ Tarjetas incorrectas
     - 5200828282828212 #No cumple las validaciones del algoritmo Luhn
     - 5105105105105099 #No cumple las validaciones del algoritmo Luhn
 
+Tambien se agrego pruebas automatizadas utilizando la herramienta pytest; para ejecutarlas simplemente ejecutar el comando "pytest" con el entorno activado, este ejecutara todas las validaciones contenidas
+en los archivos {{dominio}}_test.py.
+
 ## Seguridad
 
 El proyecto cuenta con oauth2 en los endpoints de /cobros/v2 y /cobros/v2/{{cobro_id}}/reembolso utilizando el endpoint /cobros/auth/ para generar los token.
 
 Lo recomendable es que en un ambiente productivo las credenciales oauth2 se cifren o se hashen con un algoritmo seguro.
+
+De momento no se hace la validacion de roles en el oauth2, solo que las credenciales para generar el token sean correctas.

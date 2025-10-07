@@ -11,7 +11,7 @@ CVV_PATTERN = re.compile(r"^\d{3}$")
 
 class AplicarCobroRequest(BaseModel):
     tarjeta_id: str = Field(min_length=24, max_length=24)
-    importe: float
+    importe: float = Field(ge=0.01)
     fecha_operacion: str
     cvv: str
     concepto: Optional[str] = None
