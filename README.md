@@ -45,3 +45,9 @@ Tarjetas incorrectas
     - 4242424242424ABC #No cumple la estructura de 16 caracteres numericos
     - 5200828282828212 #No cumple las validaciones del algoritmo Luhn
     - 5105105105105099 #No cumple las validaciones del algoritmo Luhn
+
+## Seguridad
+
+El proyecto cuenta con oauth2 en los endpoints de /cobros/v2 y /cobros/v2/{{cobro_id}}/reembolso utilizando el endpoint /cobros/auth/ para generar los token.
+
+Lo recomendable es que en un ambiente productivo las credenciales oauth2 se cifren o se hashen con un algoritmo seguro.

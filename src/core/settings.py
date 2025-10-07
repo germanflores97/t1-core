@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     mongo_pool_max_size: int
     mongo_pool_min_size: int
     mongo_idle_time_ms: int
+    oauth2_user: str
+    oauth2_password: str
+    oauth2_minutes_expires: int
 
     model_config = SettingsConfigDict(env_file=Path(__file__).parent.parent / ".env", env_file_encoding="UTF-8", populate_by_name=True)
 
